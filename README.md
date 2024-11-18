@@ -19,3 +19,16 @@ This means (same as JEI of course):
  * Removable "Recipe By" tooltip in recipe menu
  * More information available in recipe tabs
  * Better ordering of recipes in certain contexts
+
+### For Devs:
+Add CleanroomMC's repository and depend on HEI's maven entry:
+```groovy
+repositories {
+    maven {
+        url 'https://maven.cleanroommc.com'
+    }
+}
+
+dependencies {
+    implementation 'mezz:jei:4.26.2'
+}
