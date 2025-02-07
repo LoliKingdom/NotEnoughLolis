@@ -3,12 +3,7 @@ package mezz.jei.config;
 import javax.annotation.Nullable;
 import java.awt.Color;
 import java.io.File;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -51,6 +46,7 @@ public final class Config {
 	public static final String CATEGORY_SEARCH_COLORS = "searchColors";
 	public static final String CATEGORY_RENDERING = "rendering";
 	public static final String CATEGORY_MISC = "misc";
+	public static final String CATEGORY_CATEGORY = "category";
 
 	public static final String defaultModNameFormatFriendly = "blue italic";
 	public static final int smallestNumColumns = 4;
@@ -331,6 +327,10 @@ public final class Config {
 		return values.skipShowingProgressBar;
 	}
 
+	public static List<String> categoryUidOrder() {
+		return values.categoryUidOrder;
+	}
+
 	@Nullable
 	public static LocalizedConfiguration getConfig() {
 		return config;
@@ -511,6 +511,9 @@ public final class Config {
 		if (!needToRebuildSearchTree) {
 			needToRebuildSearchTree = categoryAdvanced.get("ultraLowMemoryUsage").hasChanged();
 		}
+
+		String[] categoryUidOrder = config.getStringList("categoryUidOrder", CATEGORY_CATEGORY, defaultValues.categoryUidOrder.toArray(new String[]{}));
+		values.categoryUidOrder = Arrays.asList(categoryUidOrder);
 
 		final boolean configChanged = config.hasChanged();
 		if (configChanged) {
