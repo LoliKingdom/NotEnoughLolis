@@ -4,6 +4,9 @@ import mezz.jei.util.GiveMode;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConfigValues {
 	// advanced
 	public boolean debugModeEnabled = false;
@@ -42,4 +45,8 @@ public class ConfigValues {
 	public boolean tooltipShowRecipeBy = true;
 	public boolean showHiddenIngredientsInCreative = false;
 	public boolean skipShowingProgressBar = false;
+	public boolean hideBottomRightCornerConfigButton = false;
+
+	// category
+	public List<String> categoryUidOrder = new ArrayList<>();
 }

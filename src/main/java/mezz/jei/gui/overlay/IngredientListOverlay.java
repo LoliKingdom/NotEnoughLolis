@@ -114,6 +114,7 @@ public class IngredientListOverlay implements IIngredientListOverlay, IMouseHand
 					displayArea.width,
 					displayArea.height - searchHeight
 				);
+
 				hasRoom = this.contents.updateBounds(availableContentsArea, guiExclusionAreas, 4 * BUTTON_SIZE);
 
 				// update area to match contents size
@@ -121,28 +122,53 @@ public class IngredientListOverlay implements IIngredientListOverlay, IMouseHand
 				displayArea.x = contentsArea.x;
 				displayArea.width = contentsArea.width;
 
-				if (searchBarCentered && isListDisplayed()) {
-					searchField.updateBounds(new Rectangle(
-						guiProperties.getGuiLeft(),
-						guiProperties.getScreenHeight() - SEARCH_HEIGHT - BORDER_PADDING,
-						guiProperties.getGuiXSize() - BUTTON_SIZE + 1,
-						SEARCH_HEIGHT
-					));
-				} else {
-					searchField.updateBounds(new Rectangle(
-						displayArea.x,
-						displayArea.y + displayArea.height - SEARCH_HEIGHT - BORDER_PADDING,
-						displayArea.width - BUTTON_SIZE + 1,
-						SEARCH_HEIGHT
-					));
+				if (Config.hideBottomRightCornerConfigButton()) {
+					if (searchBarCentered && isListDisplayed())
+						searchField.updateBounds(new Rectangle(
+							guiProperties.getGuiLeft(),
+							guiProperties.getScreenHeight() - SEARCH_HEIGHT - BORDER_PADDING,
+							guiProperties.getGuiXSize() + 1,
+							SEARCH_HEIGHT
+						));
+					else
+						searchField.updateBounds(new Rectangle(
+							displayArea.x,
+							displayArea.y + displayArea.height - SEARCH_HEIGHT - BORDER_PADDING,
+							displayArea.width + 1,
+							SEARCH_HEIGHT
+						));
+				}
+				else {
+					if (searchBarCentered && isListDisplayed())
+						searchField.updateBounds(new Rectangle(
+							guiProperties.getGuiLeft(),
+							guiProperties.getScreenHeight() - SEARCH_HEIGHT - BORDER_PADDING,
+							guiProperties.getGuiXSize() - BUTTON_SIZE + 1,
+							SEARCH_HEIGHT
+						));
+					else
+						searchField.updateBounds(new Rectangle(
+							displayArea.x,
+							displayArea.y + displayArea.height - SEARCH_HEIGHT - BORDER_PADDING,
+							displayArea.width - BUTTON_SIZE + 1,
+							SEARCH_HEIGHT
+						));
 				}
 
-				this.configButton.updateBounds(new Rectangle(
-					searchField.x + searchField.width - 1,
-					searchField.y,
-					BUTTON_SIZE,
-					BUTTON_SIZE
-				));
+				if (Config.hideBottomRightCornerConfigButton())
+					this.configButton.updateBounds(new Rectangle(
+						searchField.x + searchField.width - 1,
+						searchField.y,
+						0,
+						0
+					));
+				else
+					this.configButton.updateBounds(new Rectangle(
+						searchField.x + searchField.width - 1,
+						searchField.y,
+						BUTTON_SIZE,
+						BUTTON_SIZE
+					));
 
 				updateLayout(false);
 			}

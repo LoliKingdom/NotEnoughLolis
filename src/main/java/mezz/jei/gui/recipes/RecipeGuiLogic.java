@@ -21,6 +21,7 @@ import mezz.jei.gui.Focus;
 import mezz.jei.gui.ingredients.IngredientLookupState;
 import mezz.jei.ingredients.IngredientRegistry;
 import mezz.jei.util.MathUtil;
+import net.minecraft.inventory.ContainerPlayer;
 
 public class RecipeGuiLogic implements IRecipeGuiLogic {
 	private final IRecipeRegistry recipeRegistry;
@@ -73,6 +74,8 @@ public class RecipeGuiLogic implements IRecipeGuiLogic {
 		if (player != null) {
 			Container openContainer = player.openContainer;
 			if (openContainer != null) {
+				if (openContainer instanceof ContainerPlayer)
+					return 0;
 				for (int i = 0; i < recipeCategories.size(); i++) {
 					IRecipeCategory recipeCategory = recipeCategories.get(i);
 					IRecipeTransferHandler recipeTransferHandler = recipeRegistry.getRecipeTransferHandler(openContainer, recipeCategory);

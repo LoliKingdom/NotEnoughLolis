@@ -168,6 +168,12 @@ config.jei.rendering.bufferIngredientRenders.comment=Stops extremely frequent in
 config.jei.interface.defaultFluidContainerItem=Default Fluid Container Item
 config.jei.interface.defaultFluidContainerItem.comment=Default item to use to fill up fluids when clicking on a fluid ingredient in the menu, (format: item_name@meta)
 
+config.jei.misc.hideBottomRightCornerConfigButton=Hide Bottom-Right Corner Config Button
+config.jei.misc.hideBottomRightCornerConfigButton.comment=Whether to hide the bottom-right corner config button
+
+config.jei.category.categoryUidOrder=Category UID Order
+config.jei.category.categoryUidOrder.comment=Determines the display order of recipe categories in JEI. Categories listed earlier appear first in the JEI interface.
+
 hei.generic.ticks=%d Ticks
 
 hei.command.load_bookmarks.failure=Bookmark List not found, something went horribly wrong.

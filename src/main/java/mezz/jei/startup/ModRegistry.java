@@ -1,16 +1,11 @@
 package mezz.jei.startup;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import mezz.jei.config.Config;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -333,6 +328,29 @@ public class ModRegistry implements IModRegistry, IRecipeCategoryRegistration {
 	}
 
 	public RecipeRegistry createRecipeRegistry(IngredientRegistry ingredientRegistry) {
+		if (!Config.categoryUidOrder().isEmpty()) {
+			List<IRecipeCategory> orderedCategories = new ArrayList<>();
+			ListMultiMap<String, Object> orderedRecipeCatalysts = new ListMultiMap<>();
+
+			for (String uid : Config.categoryUidOrder()) {
+				Stream<IRecipeCategory> stream = recipeCategories.stream().filter(category -> category.getUid().equals(uid));
+				Optional<IRecipeCategory> first = stream.findFirst();
+				if (first.isPresent()) {
+					IRecipeCategory category = first.get();
+					orderedCategories.add(category);
+					recipeCategories.remove(category);
+					List<Object> catalysts = recipeCatalysts.get(uid);
+					for (Object catalyst : catalysts)
+						orderedRecipeCatalysts.put(uid, catalyst);
+					recipeCatalysts.removeKey(uid);
+				}
+			}
+
+			recipeCategories.addAll(0, orderedCategories);
+			for (Map.Entry<String, List<Object>> entry: orderedRecipeCatalysts.entrySet())
+				recipeCatalysts.insertAt(0, entry.getKey(), entry.getValue());
+		}
+
 		ImmutableTable<Class, String, IRecipeTransferHandler> recipeTransferHandlers = recipeTransferRegistry.getRecipeTransferHandlers();
 		return new RecipeRegistry(recipeCategories, unsortedRecipeHandlers, recipeHandlers, recipeTransferHandlers, unsortedRecipes, recipes, recipeClickableAreas, recipeCatalysts, ingredientRegistry, recipeRegistryPlugins);
 	}
