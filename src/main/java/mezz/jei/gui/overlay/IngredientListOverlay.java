@@ -122,7 +122,7 @@ public class IngredientListOverlay implements IIngredientListOverlay, IMouseHand
 				displayArea.x = contentsArea.x;
 				displayArea.width = contentsArea.width;
 
-				if (Config.hideRightBottomCornerConfigButton()) {
+				if (Config.hideBottomRightCornerConfigButton()) {
 					if (searchBarCentered && isListDisplayed())
 						searchField.updateBounds(new Rectangle(
 							guiProperties.getGuiLeft(),
@@ -155,7 +155,7 @@ public class IngredientListOverlay implements IIngredientListOverlay, IMouseHand
 						));
 				}
 
-				if (Config.hideRightBottomCornerConfigButton())
+				if (Config.hideBottomRightCornerConfigButton())
 					this.configButton.updateBounds(new Rectangle(
 						searchField.x + searchField.width - 1,
 						searchField.y,
