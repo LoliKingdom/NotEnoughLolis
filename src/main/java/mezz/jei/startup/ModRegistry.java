@@ -330,6 +330,8 @@ public class ModRegistry implements IModRegistry, IRecipeCategoryRegistration {
 	public RecipeRegistry createRecipeRegistry(IngredientRegistry ingredientRegistry) {
 		if (!Config.categoryUidOrder().isEmpty()) {
 			List<IRecipeCategory> orderedCategories = new ArrayList<>();
+			ListMultiMap<String, Object> orderedRecipeCatalysts = new ListMultiMap<>();
+
 			for (String uid : Config.categoryUidOrder()) {
 				Stream<IRecipeCategory> stream = recipeCategories.stream().filter(category -> category.getUid().equals(uid));
 				Optional<IRecipeCategory> first = stream.findFirst();
@@ -337,9 +339,16 @@ public class ModRegistry implements IModRegistry, IRecipeCategoryRegistration {
 					IRecipeCategory category = first.get();
 					orderedCategories.add(category);
 					recipeCategories.remove(category);
+					List<Object> catalysts = recipeCatalysts.get(uid);
+					for (Object catalyst : catalysts)
+						orderedRecipeCatalysts.put(uid, catalyst);
+					recipeCatalysts.removeKey(uid);
 				}
 			}
+
 			recipeCategories.addAll(0, orderedCategories);
+			for (Map.Entry<String, List<Object>> entry: orderedRecipeCatalysts.entrySet())
+				recipeCatalysts.insertAt(0, entry.getKey(), entry.getValue());
 		}
 
 		ImmutableTable<Class, String, IRecipeTransferHandler> recipeTransferHandlers = recipeTransferRegistry.getRecipeTransferHandlers();
