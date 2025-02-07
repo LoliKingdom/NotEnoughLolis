@@ -327,6 +327,10 @@ public final class Config {
 		return values.skipShowingProgressBar;
 	}
 
+	public static boolean hideRightBottomCornerConfigButton() {
+		return values.hideRightBottomCornerConfigButton;
+	}
+
 	public static List<String> categoryUidOrder() {
 		return values.categoryUidOrder;
 	}
@@ -501,6 +505,8 @@ public final class Config {
 		values.showHiddenIngredientsInCreative = config.getBoolean(CATEGORY_MISC, "showHiddenIngredientsInCreative", defaultValues.showHiddenIngredientsInCreative);
 
 		values.skipShowingProgressBar = config.getBoolean(CATEGORY_MISC, "skipShowingProgressBar", defaultValues.skipShowingProgressBar);
+
+		values.hideRightBottomCornerConfigButton = config.getBoolean(CATEGORY_MISC, "hideRightBottomCornerConfigButton", defaultValues.hideRightBottomCornerConfigButton);
 
 		{
 			Property property = config.get(CATEGORY_ADVANCED, "debugModeEnabled", defaultValues.debugModeEnabled);

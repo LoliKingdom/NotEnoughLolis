@@ -45,6 +45,7 @@ public class ConfigValues {
 	public boolean tooltipShowRecipeBy = true;
 	public boolean showHiddenIngredientsInCreative = false;
 	public boolean skipShowingProgressBar = false;
+	public boolean hideRightBottomCornerConfigButton = false;
 
 	// category
 	public List<String> categoryUidOrder = new ArrayList<>();
