@@ -275,7 +275,7 @@ public class InputHandler {
 			IClickedIngredient<?> clicked = getIngredientUnderMouseForKey(MouseHelper.getX(), MouseHelper.getY());
 			if (clicked != null) {
 				if (bookmark) {
-					if (bookmarkList.remove(clicked.getValue(), false)) {
+					if (bookmarkList.remove(clicked.getValue())) {
 						if (bookmarkList.isEmpty() && Config.isBookmarkOverlayEnabled()) {
 							Config.toggleBookmarkEnabled();
 						}
@@ -284,7 +284,7 @@ public class InputHandler {
 						if (!Config.isBookmarkOverlayEnabled()) {
 							Config.toggleBookmarkEnabled();
 						}
-						return bookmarkList.add(clicked.getValue(), false);
+						return bookmarkList.add(clicked.getValue());
 					}
 				} else {
 					IFocus.Mode mode = showRecipe ? IFocus.Mode.OUTPUT : IFocus.Mode.INPUT;

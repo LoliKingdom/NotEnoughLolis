@@ -43,6 +43,10 @@ public class BookmarkList implements IIngredientGridSource {
 		this.ingredientRegistry = ingredientRegistry;
 	}
 
+	public <T> boolean add(T ingredient) {
+		return add(ingredient, false);
+	}
+
 	public <T> boolean add(T ingredient, boolean forceFront) {
 		Object normalized = normalize(ingredient);
 		if (!contains(normalized)) {
@@ -89,6 +93,10 @@ public class BookmarkList implements IIngredientGridSource {
 			}
 		}
 		return false;
+	}
+
+	public boolean remove(Object ingredient) {
+		return remove(ingredient, false);
 	}
 
 	public boolean remove(Object ingredient, boolean looseEqualCheck) {
