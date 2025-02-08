@@ -43,10 +43,19 @@ public class BookmarkList implements IIngredientGridSource {
 		this.ingredientRegistry = ingredientRegistry;
 	}
 
-	public <T> boolean add(T ingredient) {
+	public <T> boolean add(T ingredient, boolean forceFront) {
 		Object normalized = normalize(ingredient);
 		if (!contains(normalized)) {
-			if (addToLists(normalized, Config.isAddingBookmarksToFront())) {
+			if (addToLists(normalized, forceFront || Config.isAddingBookmarksToFront())) {
+				notifyListenersOfChange();
+				saveBookmarks();
+				return true;
+			}
+		} else if (forceFront) {
+			// avoid boolean expression short-circuiting
+			boolean flag1 = remove(normalized, true);
+			boolean flag2 = addToLists(normalized, true);
+			if (flag1 || flag2) {
 				notifyListenersOfChange();
 				saveBookmarks();
 				return true;
@@ -82,9 +91,16 @@ public class BookmarkList implements IIngredientGridSource {
 		return false;
 	}
 
-	public boolean remove(Object ingredient) {
+	public boolean remove(Object ingredient, boolean looseEqualCheck) {
 		int index = 0;
 		for (Object existing : list) {
+			if (looseEqualCheck && ingredientEquals(ingredient, existing)) {
+				list.remove(index);
+				ingredientListElements.remove(index);
+				notifyListenersOfChange();
+				saveBookmarks();
+				return true;
+			}
 			if (ingredient == existing) {
 				list.remove(index);
 				ingredientListElements.remove(index);
@@ -93,6 +109,19 @@ public class BookmarkList implements IIngredientGridSource {
 				return true;
 			}
 			index++;
+		}
+		return false;
+	}
+
+	private boolean ingredientEquals(Object ingredient1, Object ingredient2) {
+		if (ingredient1 instanceof ItemStack && ingredient2 instanceof ItemStack) {
+			ItemStack item1 = (ItemStack) ingredient1;
+			ItemStack item2 = (ItemStack) ingredient2;
+			return item1.isItemEqual(item2);
+		} else if (ingredient1 instanceof FluidStack && ingredient2 instanceof FluidStack) {
+			FluidStack fluid1 = (FluidStack) ingredient1;
+			FluidStack fluid2 = (FluidStack) ingredient2;
+			return fluid1.isFluidEqual(fluid2);
 		}
 		return false;
 	}

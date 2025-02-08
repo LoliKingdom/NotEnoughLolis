@@ -1,8 +1,8 @@
 package mezz.jei.input;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -60,6 +60,18 @@ public class InputHandler {
 		this.showsRecipeFocuses.add(new GuiContainerWrapper(guiScreenHelper));
 	}
 
+	private boolean handleBookmarkExtra() {
+		boolean forceAdd = (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) && Keyboard.isKeyDown(KeyBindings.bookmark.getKeyCode());
+		if (!forceAdd) return false;
+		IClickedIngredient<?> clicked = getIngredientUnderMouseForKey(MouseHelper.getX(), MouseHelper.getY());
+		if (clicked != null) {
+			if (!Config.isBookmarkOverlayEnabled())
+				Config.toggleBookmarkEnabled();
+			return bookmarkList.add(clicked.getValue(), true);
+		}
+		return false;
+	}
+
 	/**
 	 * When we have keyboard focus, use Pre
 	 */
@@ -75,9 +87,11 @@ public class InputHandler {
 	 */
 	@SubscribeEvent
 	public void onGuiKeyboardEvent(GuiScreenEvent.KeyboardInputEvent.Post event) {
-		if (!hasKeyboardFocus() && handleKeyEvent()) {
+		if (hasKeyboardFocus()) return;
+		if (handleBookmarkExtra())
 			event.setCanceled(true);
-		}
+		else if (handleKeyEvent())
+			event.setCanceled(true);
 	}
 
 	@SubscribeEvent
@@ -214,7 +228,7 @@ public class InputHandler {
 		int eventKey = Keyboard.getEventKey();
 
 		return ((eventKey == 0 && typedChar >= 32) || Keyboard.getEventKeyState()) &&
-			handleKeyDown(typedChar, eventKey);
+				handleKeyDown(typedChar, eventKey);
 	}
 
 	private boolean handleKeyDown(char typedChar, int eventKey) {
@@ -261,7 +275,7 @@ public class InputHandler {
 			IClickedIngredient<?> clicked = getIngredientUnderMouseForKey(MouseHelper.getX(), MouseHelper.getY());
 			if (clicked != null) {
 				if (bookmark) {
-					if (bookmarkList.remove(clicked.getValue())) {
+					if (bookmarkList.remove(clicked.getValue(), false)) {
 						if (bookmarkList.isEmpty() && Config.isBookmarkOverlayEnabled()) {
 							Config.toggleBookmarkEnabled();
 						}
@@ -270,7 +284,7 @@ public class InputHandler {
 						if (!Config.isBookmarkOverlayEnabled()) {
 							Config.toggleBookmarkEnabled();
 						}
-						return bookmarkList.add(clicked.getValue());
+						return bookmarkList.add(clicked.getValue(), false);
 					}
 				} else {
 					IFocus.Mode mode = showRecipe ? IFocus.Mode.OUTPUT : IFocus.Mode.INPUT;
