@@ -94,12 +94,16 @@ public class BookmarkList implements IIngredientGridSource {
 	public boolean remove(Object ingredient, boolean looseEqualCheck) {
 		int index = 0;
 		for (Object existing : list) {
-			if (looseEqualCheck && ingredientEquals(ingredient, existing)) {
-				list.remove(index);
-				ingredientListElements.remove(index);
-				notifyListenersOfChange();
-				saveBookmarks();
-				return true;
+			if (looseEqualCheck) {
+				String id1 = ingredientRegistry.getIngredientHelper(ingredient).getUniqueId(ingredient);
+				String id2 = ingredientRegistry.getIngredientHelper(existing).getUniqueId(existing);
+				if (id1.equals(id2)) {
+					list.remove(index);
+					ingredientListElements.remove(index);
+					notifyListenersOfChange();
+					saveBookmarks();
+					return true;
+				}
 			}
 			if (ingredient == existing) {
 				list.remove(index);
@@ -109,19 +113,6 @@ public class BookmarkList implements IIngredientGridSource {
 				return true;
 			}
 			index++;
-		}
-		return false;
-	}
-
-	private boolean ingredientEquals(Object ingredient1, Object ingredient2) {
-		if (ingredient1 instanceof ItemStack && ingredient2 instanceof ItemStack) {
-			ItemStack item1 = (ItemStack) ingredient1;
-			ItemStack item2 = (ItemStack) ingredient2;
-			return item1.isItemEqual(item2);
-		} else if (ingredient1 instanceof FluidStack && ingredient2 instanceof FluidStack) {
-			FluidStack fluid1 = (FluidStack) ingredient1;
-			FluidStack fluid2 = (FluidStack) ingredient2;
-			return fluid1.isFluidEqual(fluid2);
 		}
 		return false;
 	}
