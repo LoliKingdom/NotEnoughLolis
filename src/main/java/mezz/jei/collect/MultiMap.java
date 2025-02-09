@@ -59,8 +59,8 @@ public class MultiMap<K, V, T extends Collection<V>> {
 		return collection != null && collection.contains(value);
 	}
 
-	public Set<Map.Entry<K, T>> entrySet() {
-		LinkedHashSet<Map.Entry<K, T>> orderedEntries = new LinkedHashSet<>();
+	public List<Map.Entry<K, T>> entrySet() {
+		List<Map.Entry<K, T>> orderedEntries = new LinkedList<>();
 		for (K key : keyOrder) {
 			orderedEntries.add(new AbstractMap.SimpleEntry<>(key, map.get(key)));
 		}
