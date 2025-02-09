@@ -44,9 +44,22 @@ public class BookmarkList implements IIngredientGridSource {
 	}
 
 	public <T> boolean add(T ingredient) {
+		return add(ingredient, false);
+	}
+
+	public <T> boolean add(T ingredient, boolean forceFront) {
 		Object normalized = normalize(ingredient);
 		if (!contains(normalized)) {
-			if (addToLists(normalized, Config.isAddingBookmarksToFront())) {
+			if (addToLists(normalized, forceFront || Config.isAddingBookmarksToFront())) {
+				notifyListenersOfChange();
+				saveBookmarks();
+				return true;
+			}
+		} else if (forceFront) {
+			// avoid boolean expression short-circuiting
+			boolean flag1 = remove(normalized, true);
+			boolean flag2 = addToLists(normalized, true);
+			if (flag1 || flag2) {
 				notifyListenersOfChange();
 				saveBookmarks();
 				return true;
@@ -83,8 +96,23 @@ public class BookmarkList implements IIngredientGridSource {
 	}
 
 	public boolean remove(Object ingredient) {
+		return remove(ingredient, false);
+	}
+
+	public boolean remove(Object ingredient, boolean looseEqualCheck) {
 		int index = 0;
 		for (Object existing : list) {
+			if (looseEqualCheck) {
+				String id1 = ingredientRegistry.getIngredientHelper(ingredient).getUniqueId(ingredient);
+				String id2 = ingredientRegistry.getIngredientHelper(existing).getUniqueId(existing);
+				if (id1.equals(id2)) {
+					list.remove(index);
+					ingredientListElements.remove(index);
+					notifyListenersOfChange();
+					saveBookmarks();
+					return true;
+				}
+			}
 			if (ingredient == existing) {
 				list.remove(index);
 				ingredientListElements.remove(index);
