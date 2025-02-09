@@ -93,10 +93,8 @@ public class IngredientListBatchRenderer {
 			IIngredientListElement<ItemStack> itemStackElement = (IIngredientListElement<ItemStack>) element;
 			ItemStack itemStack = itemStackElement.getIngredient();
 			IBakedModel bakedModel;
-			ItemModelMesher itemModelMesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
 			try {
-				bakedModel = itemModelMesher.getItemModel(itemStack);
-				bakedModel = bakedModel.getOverrides().handleItemState(bakedModel, itemStack, null, null);
+				bakedModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides(itemStack, null, null);
 				Preconditions.checkNotNull(bakedModel, "IBakedModel must not be null.");
 			} catch (Throwable throwable) {
 				String stackInfo = ErrorUtil.getItemStackInfo(itemStack);
