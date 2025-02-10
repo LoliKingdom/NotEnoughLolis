@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import mezz.jei.collect.OrderedListMultiMap;
 import mezz.jei.config.Config;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -64,7 +65,7 @@ public class ModRegistry implements IModRegistry, IRecipeCategoryRegistration {
 	private final ListMultiMap<String, Object> recipes = new ListMultiMap<>();
 	private final RecipeTransferRegistry recipeTransferRegistry;
 	private final ListMultiMap<Class<? extends GuiContainer>, RecipeClickableArea> recipeClickableAreas = new ListMultiMap<>();
-	private final ListMultiMap<String, Object> recipeCatalysts = new ListMultiMap<>();
+	private final OrderedListMultiMap<String, Object> recipeCatalysts = new OrderedListMultiMap<>();
 	private final List<IRecipeRegistryPlugin> recipeRegistryPlugins = new ArrayList<>();
 
 	public ModRegistry(JeiHelpers jeiHelpers, IIngredientRegistry ingredientRegistry) {
