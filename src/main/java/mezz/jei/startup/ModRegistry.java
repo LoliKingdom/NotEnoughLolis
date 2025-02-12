@@ -331,7 +331,7 @@ public class ModRegistry implements IModRegistry, IRecipeCategoryRegistration {
 	public RecipeRegistry createRecipeRegistry(IngredientRegistry ingredientRegistry) {
 		if (!Config.categoryUidOrder().isEmpty()) {
 			List<IRecipeCategory> orderedCategories = new ArrayList<>();
-			ListMultiMap<String, Object> orderedRecipeCatalysts = new ListMultiMap<>();
+			ListMultiMap<String, Object> orderedRecipeCatalysts = new ListMultiMap<>(new Object2ObjectLinkedOpenHashMap<>(), ArrayList::new);
 
 			for (String uid : Config.categoryUidOrder()) {
 				Stream<IRecipeCategory> stream = recipeCategories.stream().filter(category -> category.getUid().equals(uid));
