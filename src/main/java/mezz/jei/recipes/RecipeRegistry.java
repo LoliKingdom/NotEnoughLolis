@@ -14,7 +14,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import mezz.jei.collect.OrderedListMultiMap;
 import mezz.jei.config.Config;
 import net.minecraftforge.fml.common.ProgressManager;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -83,7 +82,7 @@ public class RecipeRegistry implements IRecipeRegistry {
 		List<Object> unsortedRecipes,
 		ListMultiMap<String, Object> recipes,
 		ListMultiMap<Class<? extends GuiContainer>, RecipeClickableArea> recipeClickableAreasMap,
-		OrderedListMultiMap<String, Object> recipeCatalysts,
+		ListMultiMap<String, Object> recipeCatalysts,
 		IngredientRegistry ingredientRegistry,
 		List<IRecipeRegistryPlugin> plugins
 	) {

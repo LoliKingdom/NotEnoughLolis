@@ -3,9 +3,9 @@ package mezz.jei.startup;
 import java.util.*;
 import java.util.stream.Stream;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import mezz.jei.collect.OrderedListMultiMap;
 import mezz.jei.config.Config;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -65,7 +65,7 @@ public class ModRegistry implements IModRegistry, IRecipeCategoryRegistration {
 	private final ListMultiMap<String, Object> recipes = new ListMultiMap<>();
 	private final RecipeTransferRegistry recipeTransferRegistry;
 	private final ListMultiMap<Class<? extends GuiContainer>, RecipeClickableArea> recipeClickableAreas = new ListMultiMap<>();
-	private final OrderedListMultiMap<String, Object> recipeCatalysts = new OrderedListMultiMap<>();
+	private final ListMultiMap<String, Object> recipeCatalysts = new ListMultiMap<>(new Object2ObjectLinkedOpenHashMap<>(), ArrayList::new);
 	private final List<IRecipeRegistryPlugin> recipeRegistryPlugins = new ArrayList<>();
 
 	public ModRegistry(JeiHelpers jeiHelpers, IIngredientRegistry ingredientRegistry) {
@@ -341,15 +341,15 @@ public class ModRegistry implements IModRegistry, IRecipeCategoryRegistration {
 					orderedCategories.add(category);
 					recipeCategories.remove(category);
 					List<Object> catalysts = recipeCatalysts.get(uid);
-					for (Object catalyst : catalysts)
-						orderedRecipeCatalysts.put(uid, catalyst);
-					recipeCatalysts.removeKey(uid);
+					orderedRecipeCatalysts.put(uid, catalysts);
+					recipeCatalysts.remove(uid);
 				}
 			}
 
+			orderedRecipeCatalysts.putAll(recipeCatalysts);
 			recipeCategories.addAll(0, orderedCategories);
-			for (Map.Entry<String, List<Object>> entry: orderedRecipeCatalysts.entrySet())
-				recipeCatalysts.insertAt(0, entry.getKey(), entry.getValue());
+			recipeCatalysts.clear();
+			recipeCatalysts.putAll(orderedRecipeCatalysts);
 		}
 
 		ImmutableTable<Class, String, IRecipeTransferHandler> recipeTransferHandlers = recipeTransferRegistry.getRecipeTransferHandlers();

@@ -31,6 +31,22 @@ public class MultiMap<K, V, T extends Collection<V>> {
         return get(key).add(value);
     }
 
+    public boolean put(K key, T values) {
+        return get(key).addAll(values);
+    }
+
+    public void putAll(Map<K, T> map) {
+        this.map.putAll(map);
+    }
+
+    public void putAll(MultiMap<K, V, T> map) {
+        this.map.putAll(map.map);
+    }
+
+    public boolean remove(K key) {
+        return map.remove(key) != null;
+    }
+
     public boolean remove(K key, V value) {
         T collection = map.get(key);
         return collection != null && collection.remove(value);
@@ -51,6 +67,10 @@ public class MultiMap<K, V, T extends Collection<V>> {
 
     public Stream<V> valueStream() {
         return map.values().stream().flatMap(Collection::stream);
+    }
+
+    public void clear() {
+        map.clear();
     }
 
     public int getTotalSize() {
